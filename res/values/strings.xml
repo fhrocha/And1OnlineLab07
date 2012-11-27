@@ -2,7 +2,36 @@
 <resources>
 
     <string name="app_name">And1OnlineLab07</string>
-    <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
+    <string-array name="states_array">
+        <item >Acre</item>
+		<item >Alagoas</item>
+		<item >Amapá</item>
+		<item >Amazonas</item>
+		<item >Bahia</item>
+		<item >Ceará</item>
+		<item >Distrito Federal</item>
+		<item >Espírito Santo</item>
+		<item >Goiás</item>
+		<item >Maranhão</item>
+		<item >Mato Grosso</item>
+		<item >Mato Grosso do Sul</item>
+		<item >Minas Gerais</item>
+		<item >Paraná</item>
+		<item >Paraíba</item>
+		<item >Pará</item>
+		<item >Pernambuco</item>
+		<item >Piauí</item>
+		<item >Rio de Janeiro</item>
+		<item >Rio Grande do Norte</item>
+		<item >Rio Grande do Sul</item>
+		<item >Rondonia</item>
+		<item >Roraima</item>
+		<item >Santa Catarina</item>
+		<item >Sergipe</item>
+		<item >São Paulo</item>
+		<item >Tocantins</item>
+    </string-array>
+
 
 </resources>
