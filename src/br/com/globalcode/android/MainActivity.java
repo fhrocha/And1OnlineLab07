@@ -31,7 +31,6 @@ public class MainActivity extends Activity {
 	private static final boolean[] arrayBooleanRealEstateType = new boolean[] { false, false, false, false, false };
 
 	private EditText cityEditText;
-	private Spinner estateSpinner;
 	private TextView operationTypeTextView;
 	private TextView realEstateTypeTextView;
 
@@ -82,7 +81,6 @@ public class MainActivity extends Activity {
 		this.operationTypeTextView = (TextView) this.findViewById(R.id.textViewOperationType);
 		this.realEstateTypeTextView = (TextView) this.findViewById(R.id.textViewRealStateType);
 		this.cityEditText = (EditText) this.findViewById(R.id.editTextCity);
-		this.estateSpinner = (Spinner) this.findViewById(R.id.spinnerState);
 		this.minTextView = (TextView) this.findViewById(R.id.textViewMinValue);
 		this.maxTextView = (TextView) this.findViewById(R.id.textViewMaxValue);
 		this.minSeekBar = (SeekBar) this.findViewById(R.id.seekBarMinValue);
@@ -98,14 +96,17 @@ public class MainActivity extends Activity {
 	}
 	
 	public void showOperationTypeDialog(View view) {
+		//removeDialog( DIALOG_OPERATION_TYPE );
 		showDialog( DIALOG_OPERATION_TYPE );
 	}
 
 	public void showRealStateTypeDialog(View View) {
+		//removeDialog( DIALOG_REAL_ESTATE_TYPE );
 		showDialog( DIALOG_REAL_ESTATE_TYPE );
 	}
 	
 	private void showInvalidValuesDialog() {
+		removeDialog( DIALOG_INVALID_VALUES );
 		showDialog( DIALOG_INVALID_VALUES );
 	}
 	
@@ -158,8 +159,20 @@ public class MainActivity extends Activity {
 			
 		case DIALOG_INVALID_VALUES: 
 			
-			builder.setTitle("Valor inválido!");
-			builder.setMessage("Por favor, informe os valores.");
+			String inputField = "";
+			
+			if(isCityValueInvalid()) {
+				inputField = "Cidade"; 
+			}
+			if(isOperationValueInvalid()) {
+				inputField = "Operação";
+			}
+			if(isRealStateValueInvalid()) {
+				inputField = "Tipo de imóvel";
+			}			
+			
+			builder.setTitle("Aviso Importante");
+			builder.setMessage("Para continuar, por favor, informe um valor para " + inputField);
 			builder.setPositiveButton("Ok", null);
 			return builder.create();
 			
@@ -167,8 +180,8 @@ public class MainActivity extends Activity {
 			return super.onCreateDialog(idDialogType);
 		}
 	}
-
-	OnSeekBarChangeListener listenerSeekBar = new OnSeekBarChangeListener() {
+	
+	private OnSeekBarChangeListener listenerSeekBar = new OnSeekBarChangeListener() {
 
 		@Override
 		public void onStopTrackingTouch(SeekBar seekBar) {
@@ -196,17 +209,32 @@ public class MainActivity extends Activity {
 		}
 	};
 
-	OnClickListener listenerOnClick = new OnClickListener() {
+	private OnClickListener listenerOnClick = new OnClickListener() {
 
 		@Override
 		public void onClick(View v) {
 			
-			if(EMPTY_VALUE.equals(cityEditText.getText().toString())
-					|| "Operação".equalsIgnoreCase(operationTypeTextView.getText().toString())
-						|| "Tipo de Imóvel".equalsIgnoreCase(realEstateTypeTextView.getText().toString())) {
+			if(isCityValueInvalid() 
+					|| isOperationValueInvalid() 
+						|| isRealStateValueInvalid()) {
+				
 				showInvalidValuesDialog();
 			}			
 		}		
 	};
+	
+	private boolean isCityValueInvalid() {
+		
+		return EMPTY_VALUE.equals(cityEditText.getText().toString());
+	}
+	
+	private boolean isOperationValueInvalid() {
+		return "Operação".equalsIgnoreCase(operationTypeTextView.getText().toString());
+	}
+	
+	private boolean isRealStateValueInvalid() {
+		return "Tipo de Imóvel".equalsIgnoreCase(realEstateTypeTextView.getText().toString());
+	}
+
 
 }
