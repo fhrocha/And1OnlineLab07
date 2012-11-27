@@ -1,10 +1,10 @@
 package br.com.globalcode.android;
 
-import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -27,7 +27,7 @@ public class MainActivity extends Activity {
 	private static final String CITY_VALUE = "city_value";
 	
 	private static final CharSequence[] arrayOperationType = new CharSequence[] { "Aluguel", "Venda", "Temporada" };
-	private static final CharSequence[] arrayRealEstateType = new CharSequence[] { "Casa", "Apartamento", "Sala", "Sal�o", "Ch�cara" };
+	private static final CharSequence[] arrayRealEstateType = new CharSequence[] { "Casa", "Apartamento", "Sala", "Salão", "Chácara" };
 	private static final boolean[] arrayBooleanRealEstateType = new boolean[] { false, false, false, false, false };
 
 	private EditText cityEditText;
@@ -40,6 +40,8 @@ public class MainActivity extends Activity {
 	private SeekBar maxSeekBar;
 
 	private Button searchButton;
+	
+	private Spinner spinnerState;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +88,7 @@ public class MainActivity extends Activity {
 		this.minSeekBar = (SeekBar) this.findViewById(R.id.seekBarMinValue);
 		this.maxSeekBar = (SeekBar) this.findViewById(R.id.seekBarMaxValue);
 		this.searchButton = (Button) this.findViewById(R.id.buttonSearch);
+		this.spinnerState = (Spinner) this.findViewById(R.id.spinnerState);
 	}
 
 	private void bindListeners() {
@@ -96,12 +99,10 @@ public class MainActivity extends Activity {
 	}
 	
 	public void showOperationTypeDialog(View view) {
-		//removeDialog( DIALOG_OPERATION_TYPE );
 		showDialog( DIALOG_OPERATION_TYPE );
 	}
 
 	public void showRealStateTypeDialog(View View) {
-		//removeDialog( DIALOG_REAL_ESTATE_TYPE );
 		showDialog( DIALOG_REAL_ESTATE_TYPE );
 	}
 	
@@ -118,7 +119,7 @@ public class MainActivity extends Activity {
 		
 		case DIALOG_REAL_ESTATE_TYPE:
 
-			builder.setTitle("Tipo do Im�vel");
+			builder.setTitle("Tipo do Imóvel");
 			builder.setMultiChoiceItems(arrayRealEstateType, arrayBooleanRealEstateType,
 					new DialogInterface.OnMultiChoiceClickListener() {
 
@@ -136,6 +137,10 @@ public class MainActivity extends Activity {
 									}
 								}
 							}
+							
+							if(EMPTY_VALUE.equalsIgnoreCase(viewText)) {
+								viewText = "Tipo do Imóvel";
+							}
 							realEstateTypeTextView.setText(viewText);
 						}
 					});
@@ -145,7 +150,7 @@ public class MainActivity extends Activity {
 			
 		case DIALOG_OPERATION_TYPE:
 
-			builder.setTitle("Tipo da Opera��o");
+			builder.setTitle("Tipo da Operação");
 			builder.setSingleChoiceItems(arrayOperationType, 0,
 					new DialogInterface.OnClickListener() {
 
@@ -160,19 +165,32 @@ public class MainActivity extends Activity {
 		case DIALOG_INVALID_VALUES: 
 			
 			String inputField = "";
+			String message = "Para continuar, por favor, informe um valor para ";
 			
 			if(isCityValueInvalid()) {
-				inputField = "Cidade"; 
+				inputField = "Cidade";
+				message += inputField;
+			} else if(isStateValueInvalid()) {
+				inputField = "Estado";
+				message += inputField;
+			} else if(isOperationValueInvalid()) {
+				inputField = "Operação";
+				message += inputField;
+			} else if(isRealStateValueInvalid()) {
+				inputField = "Tipo de imóvel";
+				message += inputField;
+			} else if(isMinValueInvalid()) {
+				inputField = "Valor mínimo";
+				message += inputField;
+			} else if(isMaxValueInvalid()) {
+				inputField = "Valor máximo";
+				message += inputField;
+			} else if(isMinValueGreaterThanMaxValue()) {
+				message = "O valor Mínimo não pode ser maior que o valor Máximo";
 			}
-			if(isOperationValueInvalid()) {
-				inputField = "Opera��o";
-			}
-			if(isRealStateValueInvalid()) {
-				inputField = "Tipo de im�vel";
-			}			
 			
 			builder.setTitle("Aviso Importante");
-			builder.setMessage("Para continuar, por favor, informe um valor para " + inputField);
+			builder.setMessage(message);
 			builder.setPositiveButton("Ok", null);
 			return builder.create();
 			
@@ -197,14 +215,14 @@ public class MainActivity extends Activity {
 
 			if (seekBar.getId() == R.id.seekBarMinValue) {
 
-				minTextView.setText("Valor M�nimo: " + progress);
+				minTextView.setText("Valor Mínimo: " + progress);
 			} else {
 
 				if (progress < minSeekBar.getProgress()) {
 					minSeekBar.setProgress(progress - 1);
 				}
 
-				maxTextView.setText("Valor M�ximo: " + progress);
+				maxTextView.setText("Valor Máximo: " + progress);
 			}
 		}
 	};
@@ -214,27 +232,50 @@ public class MainActivity extends Activity {
 		@Override
 		public void onClick(View v) {
 			
-			if(isCityValueInvalid() 
-					|| isOperationValueInvalid() 
-						|| isRealStateValueInvalid()) {
-				
+			if(validateInputValues()) {
 				showInvalidValuesDialog();
 			}			
-		}		
+		}
 	};
 	
+	private boolean validateInputValues() {
+		return isCityValueInvalid() 
+				|| isOperationValueInvalid() 
+					|| isRealStateValueInvalid()
+						|| isMinValueInvalid()
+							|| isMaxValueInvalid()
+								|| isStateValueInvalid()
+									|| isMinValueGreaterThanMaxValue();
+	}		
+	
 	private boolean isCityValueInvalid() {
-		
 		return EMPTY_VALUE.equals(cityEditText.getText().toString());
 	}
 	
 	private boolean isOperationValueInvalid() {
-		return "Opera��o".equalsIgnoreCase(operationTypeTextView.getText().toString());
+		return "Operação".equalsIgnoreCase(operationTypeTextView.getText().toString())
+					|| EMPTY_VALUE.equalsIgnoreCase(operationTypeTextView.getText().toString());
 	}
 	
 	private boolean isRealStateValueInvalid() {
-		return "Tipo de Im�vel".equalsIgnoreCase(realEstateTypeTextView.getText().toString());
+		return "Tipo de Imóvel".equalsIgnoreCase(realEstateTypeTextView.getText().toString())
+					|| EMPTY_VALUE.equalsIgnoreCase(realEstateTypeTextView.getText().toString());
+	}
+	
+	private boolean isMinValueInvalid() {
+		return "Valor Mínimo:".equalsIgnoreCase(minTextView.getText().toString());
 	}
 
+	private boolean isMaxValueInvalid() {
+		return "Valor Máximo:".equalsIgnoreCase(maxTextView.getText().toString());
+	}
+	
+	private boolean isStateValueInvalid() {
+		return "Selecione".equalsIgnoreCase(spinnerState.getSelectedItem().toString());
+	}
+	
+	private boolean isMinValueGreaterThanMaxValue() {
+		return minSeekBar.getProgress() > maxSeekBar.getProgress();
+	}
 
 }

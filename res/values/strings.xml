@@ -4,6 +4,7 @@
     <string name="app_name">And1OnlineLab07</string>
     <string name="menu_settings">Settings</string>
     <string-array name="states_array">
+        <item >Selecione</item>
         <item >Acre</item>
 		<item >Alagoas</item>
 		<item >Amapá</item>

@@ -13,7 +13,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="Cidade">
+            android:hint="Cidade" >
 
             <requestFocus />
         </EditText>
@@ -95,13 +95,19 @@
             android:max="5000"
             android:progress="1500" />
 
-        <Button
-            android:id="@+id/buttonSearch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="Buscar" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dip"
+            android:orientation="vertical"
+            android:gravity="center_vertical" >
 
+            <Button
+                android:id="@+id/buttonSearch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="Buscar" />
+        </LinearLayout>
     </LinearLayout>
 
 </ScrollView>
